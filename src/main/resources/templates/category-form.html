@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Category Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Save Category</h2>
+    <form th:action="@{/categories/save}" th:object="${category}" method="post" class="mt-4">
+        <input type="hidden" th:field="*{id}" />
+        
+        <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" th:field="*{name}" class="form-control" required placeholder="Ví dụ: Áo thun" />
+        </div>
+        
+        <button type="submit" class="btn btn-success">Save</button>
+        <a th:href="@{/categories}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
