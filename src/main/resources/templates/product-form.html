@@ -28,7 +28,7 @@
         <div class="mb-3">
             <label class="form-label">Category</label>
             <select th:field="*{category}" class="form-select" required>
-                <option value="" disabled selected>Select a category</option>
+                <option value="" disabled>Select a category</option>
                 <option th:each="cat : ${categories}" 
                         th:value="${cat.id}" 
                         th:text="${cat.name}">

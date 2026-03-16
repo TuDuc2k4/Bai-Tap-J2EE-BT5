@@ -2,6 +2,7 @@ package com.example.bai5_qlsp.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import java.util.List;
 
 @Data
@@ -15,5 +16,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
+    @ToString.Exclude
     private List<Product> products;
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shop - Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Product Shop</a>
+        <a class="btn btn-outline-light" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row g-4" th:if="${products != null}">
+        <div class="col-md-3" th:each="product : ${products}">
+            <div class="card h-100">
+                <img th:if="${product.image != null}" th:src="${product.image}" class="card-img-top"
+                     alt="Product image" style="object-fit: contain; height: 180px;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}">Product name</h5>
+                    <p class="card-text mb-1">
+                        <strong>Price:</strong>
+                        <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                    </p>
+                    <p class="card-text">
+                        <strong>Category:</strong>
+                        <span th:text="${product.category != null ? product.category.name : 'N/A'}"></span>
+                    </p>
+                    <a th:href="@{/shop/{id}(id=${product.id})}" class="btn btn-primary btn-sm">View details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
