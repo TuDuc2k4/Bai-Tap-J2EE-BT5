@@ -8,6 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/products")
@@ -36,7 +46,36 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public String saveProduct(@ModelAttribute Product product) {
+    public String saveProduct(@ModelAttribute Product product, @RequestParam("imageFile") MultipartFile imageFile) {
+        if (!imageFile.isEmpty()) {
+            try {
+                String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+                String uniqueName = UUID.randomUUID().toString() + "_" + fileName;
+
+                String uploadDir = "uploads/";
+                Path uploadPath = Paths.get(uploadDir);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                try (InputStream inputStream = imageFile.getInputStream()) {
+                    Path filePath = uploadPath.resolve(uniqueName);
+                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    product.setImage("/uploads/" + uniqueName);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (product.getId() != null) {
+                Product existing = productRepository.findById(product.getId()).orElse(null);
+                if (existing != null) {
+                    product.setImage(existing.getImage());
+                }
+            }
+        }
+
         productRepository.save(product);
         return "redirect:/products";
     }

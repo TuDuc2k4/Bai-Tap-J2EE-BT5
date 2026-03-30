@@ -31,11 +31,11 @@ public class SecurityConfig {
 			throws Exception {
 		http
 				.userDetailsService(accountService)
+				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/error").permitAll()
-						.requestMatchers("/shop/**").hasAnyRole("USER", "ADMIN")
-						.requestMatchers("/products/**", "/categories/**").hasRole("ADMIN")
-						.requestMatchers("/home").hasAnyRole("USER", "ADMIN")
+						.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/error", "/register").permitAll()
+						.requestMatchers("/shop/**", "/home").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "USER", "ADMIN")
+						.requestMatchers("/products/**", "/categories/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
 						.anyRequest().authenticated()
 				)
 				.formLogin(form -> form
